@@ -1,0 +1,105 @@
+[ColorEffects:Disabled]
+Color=20,20,20
+ColorAmount=-0.5
+ColorEffect=0
+ContrastAmount=0.45
+ContrastEffect=1
+IntensityAmount=0.2
+IntensityEffect=2
+
+[ColorEffects:Inactive]
+ChangeSelectionColor=true
+Color=0,0,0
+ColorAmount=0.05
+ColorEffect=1
+ContrastAmount=0.05
+ContrastEffect=0.05
+Enable=false
+IntensityAmount=0
+IntensityEffect=0
+
+[Colors:Button]
+BackgroundAlternate=8,8,8
+BackgroundNormal=29,29,29
+DecorationFocus=160,160,160
+DecorationHover=176,176,176
+ForegroundActive=190, 190, 190
+ForegroundInactive=120,119,117
+ForegroundLink=194, 194, 194
+ForegroundNegative=232,88,72
+ForegroundNeutral=192,162,95
+ForegroundNormal=164, 164, 164
+ForegroundPositive=120,183,83
+ForegroundVisited=142,121,165
+
+[Colors:Selection]
+BackgroundAlternate=104,112,78
+BackgroundNormal=118,126,89
+DecorationFocus=176,186,138
+DecorationHover=176,176,176
+ForegroundActive=163, 163, 163
+ForegroundInactive=166,166,166
+ForegroundLink=216,216,216
+ForegroundNegative=232,88,72
+ForegroundNeutral=192,162,95
+ForegroundNormal=32, 32, 32
+ForegroundPositive=120,183,83
+ForegroundVisited=142,121,165
+
+[Colors:Tooltip]
+BackgroundAlternate=14,41,69
+BackgroundNormal=64,64,64
+DecorationFocus=160,160,160
+DecorationHover=176,176,176
+ForegroundActive=184, 184, 184
+ForegroundInactive=120,119,117
+ForegroundLink=216,216,216
+ForegroundNegative=232,88,72
+ForegroundNeutral=192,162,95
+ForegroundNormal=196,209,224
+ForegroundPositive=120,183,83
+ForegroundVisited=142,121,165
+
+[Colors:View]
+BackgroundAlternate=29,28,28
+BackgroundNormal=26,26,26
+DecorationFocus=160,160,160
+DecorationHover=176,176,176
+ForegroundActive=190, 188, 188
+ForegroundInactive=120,119,117
+ForegroundLink=185, 184, 184
+ForegroundNegative=232,88,72
+ForegroundNeutral=192,162,95
+ForegroundNormal=168, 168, 168
+ForegroundPositive=120,183,83
+ForegroundVisited=142,121,165
+
+[Colors:Window]
+BackgroundAlternate=16,16,16
+BackgroundNormal=32,32,32
+DecorationFocus=0,0,0
+DecorationHover=176,176,176
+ForegroundActive=193, 193, 193
+ForegroundInactive=120,119,117
+ForegroundLink=216,216,216
+ForegroundNegative=232,88,72
+ForegroundNeutral=192,162,95
+ForegroundNormal=160, 160, 160
+ForegroundPositive=120,183,83
+ForegroundVisited=142,121,165
+
+[General]
+ColorScheme=Krita-zdark-selection-2
+Name=Krita zdark selection 2
+shadeSortColumn=false
+
+[KDE]
+contrast=0
+
+[WM]
+activeBackground=16,16,16
+activeBlend=198, 198, 198
+activeForeground=127, 149, 102
+inactiveBackground=24,24,24
+inactiveBlend=75,71,67
+inactiveForeground=128,127,125

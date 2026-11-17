@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActionCollection version="2" name="Scripts">
+    <Actions category="Scripts">
+        <text>Quick Toggle Layer</text>
+
+        <!-- Slot 1 Actions -->
+        <Action name="quick_toggle_layer_1">
+            <icon></icon>
+            <text>Quick Toggle: Toggle Layer/Group 1</text>
+            <whatsThis>Toggles visibility of the layer or group assigned to Slot 1.</whatsThis>
+            <toolTip>Toggle Layer/Group 1 Visibility</toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="quick_set_layer_1">
+            <icon></icon>
+            <text>Quick Toggle: Set Current Layer/Group as Slot 1</text>
+            <whatsThis>Pins the currently selected active layer or group folder as Slot 1.</whatsThis>
+            <toolTip>Set Current Layer/Group as Slot 1</toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <!-- Slot 2 Actions -->
+        <Action name="quick_toggle_layer_2">
+            <icon></icon>
+            <text>Quick Toggle: Toggle Layer/Group 2</text>
+            <whatsThis>Toggles visibility of the layer or group assigned to Slot 2.</whatsThis>
+            <toolTip>Toggle Layer/Group 2 Visibility</toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="quick_set_layer_2">
+            <icon></icon>
+            <text>Quick Toggle: Set Current Layer/Group as Slot 2</text>
+            <whatsThis>Pins the currently selected active layer or group folder as Slot 2.</whatsThis>
+            <toolTip>Set Current Layer/Group as Slot 2</toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <!-- Slot 3 Actions -->
+        <Action name="quick_toggle_layer_3">
+            <icon></icon>
+            <text>Quick Toggle: Toggle Layer/Group 3</text>
+            <whatsThis>Toggles visibility of the layer or group assigned to Slot 3.</whatsThis>
+            <toolTip>Toggle Layer/Group 3 Visibility</toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="quick_set_layer_3">
+            <icon></icon>
+            <text>Quick Toggle: Set Current Layer/Group as Slot 3</text>
+            <whatsThis>Pins the currently selected active layer or group folder as Slot 3.</whatsThis>
+            <toolTip>Set Current Layer/Group as Slot 3</toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+    </Actions>
+</ActionCollection>
