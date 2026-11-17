@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActionCollection version="2" name="Scripts">
+    <Actions category="Scripts">
+        <text>Cursor Resize &amp; Opacity</text>
+        <Action name="cursor_resize_opacity_toggle">
+            <icon></icon>
+            <text>Cursor Resize &amp; Opacity (Alt + drag)</text>
+            <whatsThis>Turns the Alt + cursor movement brush size / opacity control on or off.</whatsThis>
+            <toolTip>Toggle Alt + drag brush size / opacity</toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>true</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+    </Actions>
+</ActionCollection>
