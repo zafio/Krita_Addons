@@ -2,14 +2,14 @@
 
 Author: Zafio
 
-Hold **Alt** over the canvas and move the cursor (no mouse/pen button pressed):
+Hold **Alt**, press the **right mouse button** on the canvas and drag (a pen side button set to right-click works too):
 
 | Movement   | Changes          | Range      |
 |------------|------------------|------------|
 | Left/right | Brush size       | 1 – 1000 px |
 | Up/down    | Painting opacity | 1 – 100 %  |
 
-The first few pixels of movement pick the axis; it stays locked until Alt is released, so resizing never nudges opacity and vice versa. A floating message on the canvas shows the current value.
+The first few pixels of movement pick the axis; it stays locked until the right button is released, so resizing never nudges opacity and vice versa. A floating message on the canvas shows the current value.
 
 ## Precision at small values
 
@@ -29,7 +29,7 @@ Pushing past a limit and coming back responds immediately. All of this can be tu
 
 ## Notes
 
-- Alt is ignored while typing in a text field, while a button is held, over dockers, or when Ctrl/Shift are also held. Alt+key shortcuts still work as before.
-- Turn it on/off with *Tools > Scripts > Cursor Resize & Opacity (Alt + drag)* (remembered between sessions).
+- Only starts on the canvas, and not when Ctrl/Shift are also held. Plain right-click (pop-up palette) and Alt+key shortcuts work as before. Esc ends the drag.
+- Turn it on/off with *Tools > Scripts > Cursor Resize & Opacity (Alt + RMB drag)* (remembered between sessions).
 - Works with Krita 5.x (PyQt5) and is written to also load on Qt6 builds.
 - Inspired by the cursor trackers in [Shortcut Composer](https://github.com/wojtryb/Shortcut-Composer).

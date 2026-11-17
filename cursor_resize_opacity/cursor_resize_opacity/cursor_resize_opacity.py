@@ -1,33 +1,26 @@
 # Cursor Resize & Opacity - Krita 5.x plugin
 # Author: Zafio
 #
-# Hold Alt over the canvas and move the cursor:
+# Hold Alt, press the right mouse button over the canvas and drag:
 #   - horizontally -> brush size (right = bigger, minimum 1 px)
 #   - vertically   -> painting opacity (up = more opaque)
 # The first movement past a small deadzone picks the axis; it stays locked
-# until Alt is released. Small values are precise (see curves.py).
+# until the right button is released. Small values are precise (see curves.py).
 #
 # Idea based on the cursor trackers of Shortcut Composer by Wojciech Trybus
-# (https://github.com/wojtryb/Shortcut-Composer). Unlike there, the trigger is
-# Alt on its own, which Qt cannot bind as a normal shortcut, so this plugin
-# watches the Alt key with an application-wide event filter instead.
+# (https://github.com/wojtryb/Shortcut-Composer). Qt shortcuts can't bind a
+# mouse button, so Alt + RMB is caught with an application-wide event filter.
 
 from krita import Extension, Krita
 
 try:
     from PyQt5.QtCore import QObject, QEvent, QTimer, Qt
     from PyQt5.QtGui import QCursor, QIcon
-    from PyQt5.QtWidgets import (
-        QApplication, QLineEdit, QAbstractSpinBox, QTextEdit, QPlainTextEdit,
-        QComboBox,
-    )
+    from PyQt5.QtWidgets import QApplication
 except ImportError:  # Krita 6 (Qt6)
     from PyQt6.QtCore import QObject, QEvent, QTimer, Qt
     from PyQt6.QtGui import QCursor, QIcon
-    from PyQt6.QtWidgets import (
-        QApplication, QLineEdit, QAbstractSpinBox, QTextEdit, QPlainTextEdit,
-        QComboBox,
-    )
+    from PyQt6.QtWidgets import QApplication
 
 from .curves import SizeCurve, OpacityCurve
 
@@ -48,13 +41,12 @@ OPACITY_PRECISE_PX = 5       # screen px per 1 % below OPACITY_PRECISE_UNTIL
 OPACITY_PX = 2.5             # screen px per 1 % above it
 
 SHOW_MESSAGE = True          # floating "Size: 12 px" / "Opacity: 40 %" text
-ONLY_OVER_CANVAS = True      # ignore Alt when the cursor is over dockers etc.
+ONLY_OVER_CANVAS = True      # only start when the press is on the canvas
 
 SETTINGS_GROUP = "cursor_resize_opacity"
 ACTION_TOGGLE = "cursor_resize_opacity_toggle"
 
 CANVAS_CLASSES = ("KisOpenGLCanvas2", "KisQPainterCanvas", "KisCanvasWidgetBase")
-TEXT_WIDGETS = (QLineEdit, QAbstractSpinBox, QTextEdit, QPlainTextEdit)
 
 ALT = Qt.KeyboardModifier.AltModifier
 OTHER_MODS = (Qt.KeyboardModifier.ControlModifier
@@ -77,67 +69,89 @@ class _Tracker(QObject):
         self.travel = 0.0
         self.curve = None
         self.last_applied = None
+        self.from_mouse = True
+        self.swallow_context_menu = False
 
         self.timer = QTimer(self)
         self.timer.setInterval(TICK_MS)
         self.timer.timeout.connect(self._tick)
 
     # -- event filter -------------------------------------------------------
+    # Alt + right mouse button (mouse or pen side button) starts the drag;
+    # releasing the right button ends it. While dragging, the right-button
+    # press/move/release are consumed so Krita doesn't also open the pop-up
+    # palette or start a stroke. Everything else passes through untouched.
+    PRESS = (QEvent.Type.MouseButtonPress, QEvent.Type.MouseButtonDblClick,
+             QEvent.Type.TabletPress)
+    MOVE = (QEvent.Type.MouseMove, QEvent.Type.TabletMove)
+    RELEASE = (QEvent.Type.MouseButtonRelease, QEvent.Type.TabletRelease)
+
     def eventFilter(self, obj, event):
         try:
             etype = event.type()
-            if etype == QEvent.Type.KeyPress:
-                if event.key() == Qt.Key.Key_Alt:
-                    if not event.isAutoRepeat() and self.state == self.IDLE:
-                        self._try_start(event)
-                elif self.state != self.IDLE:
-                    # Alt+<key> is a shortcut, not a drag.
-                    self._stop()
-            elif etype == QEvent.Type.KeyRelease:
-                if event.key() == Qt.Key.Key_Alt and not event.isAutoRepeat():
-                    self._stop()
-            elif etype in (QEvent.Type.MouseButtonPress,
-                           QEvent.Type.TabletPress,
-                           QEvent.Type.ApplicationDeactivate,
-                           QEvent.Type.WindowDeactivate):
-                if self.state != self.IDLE:
-                    self._stop()
+
+            if self.state == self.IDLE:
+                if etype == QEvent.Type.ContextMenu and self.swallow_context_menu:
+                    # Windows sends a context menu after the RMB release.
+                    self.swallow_context_menu = False
+                    return True
+                if etype in self.PRESS and \
+                        event.button() == Qt.MouseButton.RightButton:
+                    return self._try_start(event)
+                return False
+
+            # -- dragging --
+            if etype in (QEvent.Type.ApplicationDeactivate,
+                         QEvent.Type.WindowDeactivate):
+                self._stop()
+                return False
+            # Some tablet drivers report the side-button release as NoButton.
+            if etype in self.RELEASE and (
+                    event.button() == Qt.MouseButton.RightButton or
+                    (not self.from_mouse and
+                     etype == QEvent.Type.TabletRelease)):
+                self._stop()
+                self.swallow_context_menu = True
+                QTimer.singleShot(300, self._clear_context_swallow)
+                return True
+            if etype in self.PRESS or etype in self.MOVE or \
+                    etype in self.RELEASE or etype == QEvent.Type.ContextMenu:
+                return True
+            if etype == QEvent.Type.KeyPress and event.key() == Qt.Key.Key_Escape:
+                self._stop()
+                return True
         except Exception:
             self._stop()
-        # Never consume: Krita's own input manager must see every event,
-        # otherwise it could think Alt is stuck.
         return False
+
+    def _clear_context_swallow(self):
+        self.swallow_context_menu = False
 
     # -- start / stop ---------------------------------------------------------
     def _try_start(self, event):
+        """Return True (consume the press) if the drag started."""
         if not self.enabled:
-            return
-        if event.modifiers() & OTHER_MODS:
-            return
-        if QApplication.mouseButtons() != Qt.MouseButton.NoButton:
-            return
-        if isinstance(QApplication.focusWidget(), TEXT_WIDGETS):
-            return
-        if isinstance(QApplication.focusWidget(), QComboBox) and \
-                QApplication.focusWidget().isEditable():
-            return
+            return False
+        mods = QApplication.queryKeyboardModifiers()
+        if not (mods & ALT) or (mods & OTHER_MODS):
+            return False
 
         window = Krita.instance().activeWindow()
         if window is None or window.activeView() is None:
-            return
+            return False
         if window.activeView().document() is None:
-            return
-        if QApplication.activeWindow() is not window.qwindow():
-            return
+            return False
         if ONLY_OVER_CANVAS and not self._cursor_over_canvas():
-            return
+            return False
 
         self.view = window.activeView()
+        self.from_mouse = event.type() != QEvent.Type.TabletPress
         self.origin = QCursor.pos()
         self.last_pos = self.origin
         self.last_applied = None
         self.state = self.WAITING
         self.timer.start()
+        return True
 
     def _stop(self):
         self.timer.stop()
@@ -157,11 +171,9 @@ class _Tracker(QObject):
     # -- main loop ------------------------------------------------------------
     def _tick(self):
         try:
-            # Missed release (Alt+Tab, focus change...) -> stop.
-            if not (QApplication.queryKeyboardModifiers() & ALT):
-                self._stop()
-                return
-            if QApplication.mouseButtons() != Qt.MouseButton.NoButton:
+            # Missed mouse release (e.g. released outside the window).
+            if self.from_mouse and not (
+                    QApplication.mouseButtons() & Qt.MouseButton.RightButton):
                 self._stop()
                 return
 
@@ -255,7 +267,7 @@ class CursorResizeOpacityExtension(Extension):
     def createActions(self, window):
         action = window.createAction(
             ACTION_TOGGLE,
-            "Cursor Resize & Opacity (Alt + drag)",
+            "Cursor Resize & Opacity (Alt + RMB drag)",
             "tools/scripts",
         )
         action.setCheckable(True)

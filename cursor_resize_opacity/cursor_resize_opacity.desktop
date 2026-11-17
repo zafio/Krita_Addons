@@ -5,4 +5,4 @@ X-KDE-Library=cursor_resize_opacity
 X-Python-2-Compatible=false
 X-Krita-Manual=Manual.html
 Name=Cursor Resize & Opacity
-Comment=Hold Alt and move the cursor: horizontal = brush size, vertical = opacity
+Comment=Alt + right-click drag: horizontal = brush size, vertical = opacity
